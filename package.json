@@ -1,0 +1,26 @@
+{
+  "name": "lotto",
+  "version": "1.0.0",
+  "description": "Lotto Number Generator",
+  "main": "lotto.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/AJCrowley/lotto.git"
+  },
+  "keywords": [
+    "lotto",
+    "generator"
+  ],
+  "author": "Kris McCann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AJCrowley/lotto/issues"
+  },
+  "homepage": "https://github.com/AJCrowley/lotto#readme",
+  "dependencies": {
+    "node-notifier": "^8.0.0"
+  }
+}
