@@ -4,7 +4,7 @@ const notifier = require('node-notifier');
     const low = process.argv[2] || 1,
         high = process.argv[3] || 59,
         numPicks = process.argv[4] || 6,
-        numDraws = process.argv[5] || 1000000000;
+        numDraws = process.argv[5] || 1000000000; // takes about 16 secs per 1000000000
 
     const lotto = (low, high, numPicks, numDraws) => {
         const results = [high],
