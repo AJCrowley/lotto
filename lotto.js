@@ -48,7 +48,7 @@ const notifier = require('node-notifier');
     const showHelp = () => {
         console.log(
             'Usage: node lotto.js {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum}\n',
-            'Defaults: {low ball: 1} {high ball: 50} {number of picks: 5} {number of draws: 1000000000} {draw}'
+            'Defaults: {low ball: 1} {high ball: 59} {number of picks: 6} {number of draws: 1000000000} {draw}'
         );
     };
 
