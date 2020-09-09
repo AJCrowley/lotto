@@ -1,6 +1,6 @@
 import notifier from 'node-notifier';
 
-const lotto = (low, high, numPicks, numDraws, drawType) => {
+const runLotto = (low, high, numPicks, numDraws, drawType) => {
     const results = [high],
     displayResults = [],
     accumFactor = 100,
@@ -81,7 +81,7 @@ const formatTime = (duration) => {
 };
 
 
-const runLotto = () => {
+const lotto = () => {
     const low = process.argv[2] || 1,
         high = process.argv[3] || 59,
         numPicks = process.argv[4] || 6,
@@ -103,7 +103,7 @@ const runLotto = () => {
             showHelp();
         } else {
             const startTime = new Date().getTime(),
-                results = lotto(low, high, numPicks, numDraws, drawType),
+                results = runLotto(low, high, numPicks, numDraws, drawType),
                 endTime = formatTime(parseInt(new Date().getTime()) - parseInt(startTime));
 
             notifier.notify(
@@ -121,8 +121,4 @@ const runLotto = () => {
     }
 };
 
-runLotto();
-
-export default {
-    runLotto
-}
+lotto();
