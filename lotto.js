@@ -3,14 +3,14 @@ import notifier from 'node-notifier';
 const runLotto = (low, high, numPicks, numDraws, drawType) => {
     const results = [high],
     displayResults = [],
-    accumFactor = 100,
+    accumFactor = 10,
     lastNum = {
         num: 0,
-        score: 1
+        score: 1,
+        curInRow: 1
     };
 
     let draw,
-        curInRow = 1,
         drawTypeText = "Draw";
 
     switch (drawType) {
@@ -31,25 +31,24 @@ const runLotto = (low, high, numPicks, numDraws, drawType) => {
         }
     }
 
-    if (drawType == 'accum' || drawType == 'accummax') {
-        for (let count = 0; count < numDraws; count++) {
-            draw = Math.round(Math.random() * (high - low));
+    for (let count = 0; count < numDraws; count++) {
+        draw = Math.round(Math.random() * (high - low));
+        if (drawType == 'accum' || drawType == 'accummax') {
             if (draw == lastNum.num) {
                 results[draw].score += lastNum.score;
                 lastNum.score *= accumFactor;
-                curInRow ++;
-                if (results[draw].maxInRow < curInRow) {
-                    results[draw].maxInRow = curInRow;
+                if (drawType == 'accummax') {
+                    lastNum.curInRow ++;
+                    if (results[draw].maxInRow < lastNum.curInRow) {
+                        results[draw].maxInRow = lastNum.curInRow;
+                    }
                 }
             } else {
-                curInRow = 1;
+                lastNum.curInRow = 1;
                 lastNum.num = draw;
                 lastNum.score = 1;
             }
-        }
-    } else {
-        for (let count = 0; count < numDraws; count++) {
-            draw = Math.round(Math.random() * (high - low));
+        } else {
             results[draw].score++;
         }
     }
