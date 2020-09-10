@@ -9,21 +9,40 @@ const runLotto = (low, high, numPicks, numDraws, drawType) => {
         score: 1
     };
 
-    let draw;
+    let draw,
+        curInRow = 1,
+        drawTypeText = "Draw";
 
-    console.log(`\n${(drawType == 'accum' ? 'Accumulator' : 'Draw')}\nLow ball: ${low}\nHigh ball: ${high}\nNumber of picks: ${numPicks}\nNumber of draws: ${numDraws}`);
+    switch (drawType) {
+        case 'accum':
+            drawTypeText = "Accumulator";
+            break;
+        case 'accummax':
+            drawTypeText = "Max Accumulator";
+            break;
+    }
+
+    console.log(`\n${drawTypeText}\nLow ball: ${low}\nHigh ball: ${high}\nNumber of picks: ${numPicks}\nNumber of draws: ${numDraws}`);
 
     for (let count = 0; count < high; count++) {
         results[count] = {ball: count + parseInt(low), score: 0};
+        if (drawType == 'accummax') {
+            results[count].maxInRow = 1;
+        }
     }
 
-    if (drawType == 'accum') {
+    if (drawType == 'accum' || drawType == 'accummax') {
         for (let count = 0; count < numDraws; count++) {
             draw = Math.round(Math.random() * (high - low));
             if (draw == lastNum.num) {
                 results[draw].score += lastNum.score;
                 lastNum.score *= accumFactor;
+                curInRow ++;
+                if (results[draw].maxInRow < curInRow) {
+                    results[draw].maxInRow = curInRow;
+                }
             } else {
+                curInRow = 1;
                 lastNum.num = draw;
                 lastNum.score = 1;
             }
@@ -37,6 +56,10 @@ const runLotto = (low, high, numPicks, numDraws, drawType) => {
 
     results.sort((a, b) => b.score - a.score);
 
+    if (drawType == 'accummax') {
+        results.sort((a, b) => b.maxInRow - a.maxInRow);
+    }
+
     for (let count = 0; count < numPicks; count++) {
         displayResults.push(results[count]);
     }
@@ -48,7 +71,7 @@ const runLotto = (low, high, numPicks, numDraws, drawType) => {
 
 const showHelp = () => {
     console.log(
-        'Usage: node lotto.js {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum}\n',
+        'Usage: node lotto.js {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accummax}\n',
         'Defaults: {low ball: 1} {high ball: 59} {number of picks: 6} {number of draws: 1000000000} {draw}'
     );
 };
