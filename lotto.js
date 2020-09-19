@@ -80,6 +80,7 @@ const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
                         results[draw].maxInRow = lastNum.curInRow;
                         if (results[draw].maxInRow == minConsecutive) {
                             drawsMet++;
+                            console.log(`\nPicked ${drawsMet} of ${numPicks} numbers`);
                             lastNum.curInRow = 1;
                         }
                     }
