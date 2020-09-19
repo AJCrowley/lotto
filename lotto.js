@@ -1,4 +1,5 @@
 import notifier from 'node-notifier';
+import config from './config.js';
 
 const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
     const results = [high],
@@ -113,13 +114,13 @@ const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
 
 const showHelp = () => {
     console.log(
-        '\nUsage: node lotto.js {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}\n',
-        '\nDefaults: {low ball: 1} {high ball: 59} {number of picks: 6} {number of draws: 1000000000} {draw}',
-        '\nDraw (draw) mode just picks a number and increments the score of the associated ball each time it is picked',
-        '\nAccumulator (accum) mode applies a multiplier to consecutive picks, giving a higher score to balls that show up multipled times in a row',
-        '\nMax Accumulator (accumax) mode is the same as accumulator, but ranks results by concurrent draws, not by score',
-        '\nIn Minimum Consecutive (mincon) mode number of draws is irrelevant, as draws will continue until the desired number of picks has been met in concurrent draws',
-        '\nIn other draw modes, min consecutive picks is not a required param, as the draws will continue until the specified number of draws'
+        `\nUsage: node lotto.js {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}\n`,
+        `\nDefaults: {low ball: ${config.low}} {high ball: ${config.high}} {number of picks: ${config.numPicks}} {number of draws: ${config.numDraws}} {drawType: ${config.drawType}} {minConsecutive: ${config.minConsecutive}}`,
+        `\nDraw (draw) mode just picks a number and increments the score of the associated ball each time it is picked`,
+        `\nAccumulator (accum) mode applies a multiplier to consecutive picks, giving a higher score to balls that show up multipled times in a row`,
+        `\nMax Accumulator (accumax) mode is the same as accumulator, but ranks results by concurrent draws, not by score`,
+        `\nIn Minimum Consecutive (mincon) mode number of draws is irrelevant, as draws will continue until the desired number of picks has been met in concurrent draws`,
+        `\nIn other draw modes, min consecutive picks is not a required param, as the draws will continue until the specified number of draws`
     );
 };
 
@@ -151,14 +152,13 @@ const formatTime = (duration) => {
     return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 };
 
-
 const lotto = () => {
-    const low = process.argv[2] || 1,
-        high = process.argv[3] || 59,
-        numPicks = process.argv[4] || 6,
-        numDraws = process.argv[5] || 1000000000, // takes about 16 secs per 1000000000 on draw or 1:07 accumulator
-        drawType = process.argv[6] || 'draw',
-        minConsecutive = process.argv[7] || 5; // minimum consecutive draws in mincon mode
+    const low = config.low || 1,
+        high = config.high || 59,
+        numPicks = config.numPicks || 6,
+        numDraws = config.numDraws || 1000000000, // takes about 16 secs per 1000000000 on draw or 1:07 accumulator
+        drawType = config.drawType || 'draw',
+        minConsecutive = config.minConsecutive || 5; // minimum consecutive draws in mincon mode
     if (process.argv[2] == '--help' || process.argv[2] == '--h' || process.argv[2] == '-h' || process.argv[2] == '-?') {
         showHelp();
     } else {
