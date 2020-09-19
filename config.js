@@ -4,7 +4,7 @@ const config = {
     low: 1,
     high: 59,
     numPicks: 6,
-    numDraws: 1000000000,
+    numDraws: 5000000000,
 };
 
 export default config;

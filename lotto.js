@@ -153,12 +153,12 @@ const formatTime = (duration) => {
 };
 
 const lotto = () => {
-    const low = config.low || 1,
-        high = config.high || 59,
-        numPicks = config.numPicks || 6,
-        numDraws = config.numDraws || 1000000000, // takes about 16 secs per 1000000000 on draw or 1:07 accumulator
-        drawType = config.drawType || 'draw',
-        minConsecutive = config.minConsecutive || 5; // minimum consecutive draws in mincon mode
+    const low = process.argv[2] || config.low || 1,
+        high = process.argv[3] || config.high || 59,
+        numPicks = process.argv[4] || config.numPicks || 6,
+        numDraws = process.argv[5] || config.numDraws || 1000000000, // takes about 16 secs per 1000000000 on draw or 1:07 accumulator
+        drawType = process.argv[6] || config.drawType || 'draw',
+        minConsecutive = process.argv[7] || config.minConsecutive || 5; // minimum consecutive draws in mincon mode
     if (process.argv[2] == '--help' || process.argv[2] == '--h' || process.argv[2] == '-h' || process.argv[2] == '-?') {
         showHelp();
     } else {
