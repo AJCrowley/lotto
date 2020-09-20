@@ -5,7 +5,7 @@
 This program is provided free for use, if you make any enhancements, please feel free to issue a PR and I will integrate any changes that improve the software.
 ## Usage:
 ```
-node lotto.js [-h] [-p] {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}
+node lotto.js [-h] [-p {preset}] {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}
 ```
 
 ```
