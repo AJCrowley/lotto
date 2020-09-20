@@ -1,10 +1,9 @@
-import notifier from 'node-notifier';
 import config from './config.js';
 
 const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
     const results = [high],
     displayResults = [],
-    accumFactor = 10,
+    accumFactor = config.accumFactor,
     lastNum = {
         num: 0,
         curInRow: 1
@@ -115,13 +114,15 @@ const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
 
 const showHelp = () => {
     console.log(
-        `\nUsage: node lotto.js {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}\n`,
+        `\nUsage: node lotto.js [-p] {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}\n`,
         `\nDefaults: {low ball: ${config.low}} {high ball: ${config.high}} {number of picks: ${config.numPicks}} {number of draws: ${config.numDraws}} {drawType: ${config.drawType}} {minConsecutive: ${config.minConsecutive}}`,
         `\nDraw (draw) mode just picks a number and increments the score of the associated ball each time it is picked`,
         `\nAccumulator (accum) mode applies a multiplier to consecutive picks, giving a higher score to balls that show up multipled times in a row`,
         `\nMax Accumulator (accumax) mode is the same as accumulator, but ranks results by concurrent draws, not by score`,
         `\nIn Minimum Consecutive (mincon) mode number of draws is irrelevant, as draws will continue until the desired number of picks has been met in concurrent draws`,
-        `\nIn other draw modes, min consecutive picks is not a required param, as the draws will continue until the specified number of draws`
+        `\nIn other draw modes, min consecutive picks is not a required param, as the draws will continue until the specified number of draws`,
+        `\nIf the -p flag has been added, the only other param required is the id word from the config file for the desired draw format`,
+        `\ne.g. node lotto.js -p ${config.presets[0].id}`
     );
 };
 
@@ -153,6 +154,19 @@ const formatTime = (duration) => {
     return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 };
 
+const runPreset = (preset) => {
+    const presets = config.presets.find(element => element.id == preset),
+        startTime = new Date().getTime();
+    console.log(`\nRunning preset script for ${presets.name}`);
+    let results;
+    for (let count = 0; count < presets.draws.length; count++) {
+        results = runLotto(presets.draws[count].low, presets.draws[count].high, presets.draws[count].numPicks, presets.draws[count].numDraws, presets.draws[count].drawType, presets.draws[count].minConsecutive);
+    }
+    const endTime = formatTime(parseInt(new Date().getTime()) - parseInt(startTime));
+
+    console.log(`Execution time: ${endTime}`);
+}
+
 const lotto = () => {
     const low = process.argv[2] || config.low || 1,
         high = process.argv[3] || config.high || 59,
@@ -160,34 +174,20 @@ const lotto = () => {
         numDraws = process.argv[5] || config.numDraws || 1000000000, // takes about 16 secs per 1000000000 on draw or 1:07 accumulator
         drawType = process.argv[6] || config.drawType || 'draw',
         minConsecutive = process.argv[7] || config.minConsecutive || 5; // minimum consecutive draws in mincon mode
-    if (process.argv[2] == '--help' || process.argv[2] == '--h' || process.argv[2] == '-h' || process.argv[2] == '-?') {
-        showHelp();
+    if (process.argv[2] == '-p') {
+        runPreset(process.argv[3]);
+        return;
     } else {
-        if (inputError(low, high, numPicks, numDraws, drawType)) {
-            notifier.notify(
-                {
-                    title: 'Error',
-                    message: 'Invalid input params',
-                    timeout: 3,
-                    icon: 'Terminal Icon',
-                    sound: 'Hero',
-                }
-            );
+        if (process.argv[2] == '--help' || process.argv[2] == '--h' || process.argv[2] == '-h' || process.argv[2] == '-?') {
             showHelp();
         } else {
+            if (inputError(low, high, numPicks, numDraws, drawType)) {
+                showHelp();
+                return;
+            }
             const startTime = new Date().getTime(),
                 results = runLotto(low, high, numPicks, numDraws, drawType, minConsecutive),
                 endTime = formatTime(parseInt(new Date().getTime()) - parseInt(startTime));
-
-            notifier.notify(
-                {
-                    title: 'Complete',
-                    message: 'Completed in: ' + endTime,
-                    timeout: 3,
-                    icon: 'Terminal Icon',
-                    sound: 'Glass',
-                }
-            );
 
             console.log(`Execution time: ${endTime}`);
         }

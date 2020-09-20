@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/AJCrowley/lotto#readme",
   "dependencies": {
-    "node-notifier": "^8.0.0"
+
   }
 }
