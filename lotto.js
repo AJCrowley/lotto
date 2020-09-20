@@ -2,115 +2,115 @@ import config from './config.js';
 
 const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
     const results = [high],
-    displayResults = [],
-    accumFactor = config.accumFactor,
-    lastNum = {
-        num: 0,
-        curInRow: 1
-    };
+        displayResults = [],
+        accumFactor = config.accumFactor,
+        lastNum = {
+            num: 0,
+            curInRow: 1
+        };
 
-    let draw,
-        drawsMet = 0,
-        drawTypeText = "Draw";
+        let draw,
+            drawsMet = 0,
+            drawTypeText = "Draw";
 
-    switch (drawType) {
-        case 'accum':
-            drawTypeText = "Accumulator";
-            break;
-        case 'accumax':
-            drawTypeText = "Max Accumulator";
-            break;
-        case 'mincon':
-            drawTypeText = "Minimum Consecutive";
-            break;
-    }
+        switch (drawType) {
+            case 'accum':
+                drawTypeText = "Accumulator";
+                break;
+            case 'accumax':
+                drawTypeText = "Max Accumulator";
+                break;
+            case 'mincon':
+                drawTypeText = "Minimum Consecutive";
+                break;
+        }
 
-    for (let count = 0; count < high; count++) {
-        results[count] = {ball: count + parseInt(low)};
+        for (let count = 0; count < high; count++) {
+            results[count] = {ball: count + parseInt(low)};
+            if (drawType != 'mincon') {
+                results[count].score = 0;
+            }
+            if (drawType == 'accumax' || drawType == 'mincon') {
+                results[count].maxInRow = 1;
+            }
+        }
+
         if (drawType != 'mincon') {
-            results[count].score = 0;
+            console.log(`\n${drawTypeText}\nLow ball: ${low}\nHigh ball: ${high}\nNumber of picks: ${numPicks}\nNumber of draws: ${numDraws}`);
+        } else {
+            console.log(`\n${drawTypeText}\nLow ball: ${low}\nHigh ball: ${high}\nNumber of picks: ${numPicks}\nMin consecutive draws: ${minConsecutive}`);
         }
-        if (drawType == 'accumax' || drawType == 'mincon') {
-            results[count].maxInRow = 1;
-        }
-    }
-
-    if (drawType != 'mincon') {
-        console.log(`\n${drawTypeText}\nLow ball: ${low}\nHigh ball: ${high}\nNumber of picks: ${numPicks}\nNumber of draws: ${numDraws}`);
-    } else {
-        console.log(`\n${drawTypeText}\nLow ball: ${low}\nHigh ball: ${high}\nNumber of picks: ${numPicks}\nMin consecutive draws: ${minConsecutive}`);
-    }
 
 
-    switch (drawType) {
-        case 'draw':
-            for (let count = 0; count < numDraws; count++) {
-                draw = Math.round(Math.random() * (high - low));
-                results[draw].score++;
-            }
-            break;
-        case 'accum':
-        case 'accumax':
-            for (let count = 0; count < numDraws; count++) {
-                draw = Math.round(Math.random() * (high - low));
-                if (draw == lastNum.num) {
-                    results[draw].score += lastNum.score;
-                    lastNum.score *= accumFactor;
-                    if (drawType == 'accumax') {
-                        lastNum.curInRow ++;
-                        if (results[draw].maxInRow < lastNum.curInRow) {
+        switch (drawType) {
+            case 'draw':
+                for (let count = 0; count < numDraws; count++) {
+                    draw = Math.round(Math.random() * (high - low));
+                    results[draw].score++;
+                }
+                break;
+            case 'accum':
+            case 'accumax':
+                for (let count = 0; count < numDraws; count++) {
+                    draw = Math.round(Math.random() * (high - low));
+                    if (draw == lastNum.num) {
+                        results[draw].score += lastNum.score;
+                        lastNum.score *= accumFactor;
+                        if (drawType == 'accumax') {
+                            lastNum.curInRow ++;
+                            if (results[draw].maxInRow < lastNum.curInRow) {
+                                results[draw].maxInRow = lastNum.curInRow;
+                            }
+                        }
+                    } else {
+                        lastNum.curInRow = 1;
+                        lastNum.num = draw;
+                        lastNum.score = 1;
+                    }
+                }
+                break;
+            case 'mincon':
+                lastNum.curInRow = 1;
+                while (drawsMet < numPicks) {
+                    draw = Math.round(Math.random() * (high - low));
+                    if (draw == lastNum.num) {
+                        if (results[draw].maxInRow < minConsecutive) {
+                            lastNum.curInRow++;
                             results[draw].maxInRow = lastNum.curInRow;
+                            if (results[draw].maxInRow == minConsecutive) {
+                                drawsMet++;
+                                console.log(`\nPicked ${drawsMet} of ${numPicks} numbers`);
+                                lastNum.curInRow = 1;
+                            }
                         }
+                    } else {
+                        lastNum.num = draw;
+                        lastNum.curInRow = 1;
                     }
-                } else {
-                    lastNum.curInRow = 1;
-                    lastNum.num = draw;
-                    lastNum.score = 1;
                 }
+                break;
             }
-            break;
-        case 'mincon':
-            lastNum.curInRow = 1;
-            while (drawsMet < numPicks) {
-                draw = Math.round(Math.random() * (high - low));
-                if (draw == lastNum.num) {
-                    if (results[draw].maxInRow < minConsecutive) {
-                        lastNum.curInRow++;
-                        results[draw].maxInRow = lastNum.curInRow;
-                        if (results[draw].maxInRow == minConsecutive) {
-                            drawsMet++;
-                            console.log(`\nPicked ${drawsMet} of ${numPicks} numbers`);
-                            lastNum.curInRow = 1;
-                        }
-                    }
-                } else {
-                    lastNum.num = draw;
-                    lastNum.curInRow = 1;
-                }
-            }
-            break;
+
+        results.sort((a, b) => b.score - a.score);
+
+        if (drawType == 'accumax') {
+            results.sort((a, b) => b.maxInRow - a.maxInRow);
         }
 
-    results.sort((a, b) => b.score - a.score);
+        if (drawType == 'mincon') {
+            results.sort((a, b) => b.maxInRow - a.maxInRow);
+        }
 
-    if (drawType == 'accumax') {
-        results.sort((a, b) => b.maxInRow - a.maxInRow);
-    }
+        for (let count = 0; count < numPicks; count++) {
+            displayResults.push(results[count]);
+        }
 
-    if (drawType == 'mincon') {
-        results.sort((a, b) => b.maxInRow - a.maxInRow);
-    }
+        if (drawType != 'mincon') {
+            displayResults.sort((a, b) => a.ball - b.ball);
+        }
 
-    for (let count = 0; count < numPicks; count++) {
-        displayResults.push(results[count]);
-    }
-
-    if (drawType != 'mincon') {
-        displayResults.sort((a, b) => a.ball - b.ball);
-    }
-
-    console.log(displayResults);
-},
+        console.log(displayResults);
+    },
 
     showHelp = () => {
         console.log(
