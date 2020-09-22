@@ -112,17 +112,17 @@ const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
         console.log(displayResults);
     },
 
-    showHelp = () => {
+    showHelp = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
         console.log(
             `\nUsage: node lotto.js [-p] {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}\n`,
-            `\nDefaults: {low ball: ${config.low}} {high ball: ${config.high}} {number of picks: ${config.numPicks}} {number of draws: ${config.numDraws}} {drawType: ${config.drawType}} {minConsecutive: ${config.minConsecutive}}`,
+            `\nDefaults: {low ball: ${low}} {high ball: ${high}} {number of picks: ${numPicks}} {number of draws: ${numDraws}} {drawType: ${drawType}} {minConsecutive: ${minConsecutive}}`,
             `\nDraw (draw) mode just picks a number and increments the score of the associated ball each time it is picked`,
             `\nAccumulator (accum) mode applies a multiplier to consecutive picks, giving a higher score to balls that show up multipled times in a row`,
             `\nMax Accumulator (accumax) mode is the same as accumulator, but ranks results by concurrent draws, not by score`,
             `\nIn Minimum Consecutive (mincon) mode number of draws is irrelevant, as draws will continue until the desired number of picks has been met in concurrent draws`,
             `\nIn other draw modes, min consecutive picks is not a required param, as the draws will continue until the specified number of draws`,
             `\nIf the -p flag has been added, the only other param required is the id word from the config file for the desired draw format`,
-            `\ne.g. node lotto.js -p ${config.presets[0].id}`
+            `\ne.g. node lotto.js -p presetId`
         );
     },
 
@@ -191,11 +191,11 @@ const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
             return;
         } else {
             if (process.argv[2] == '--help' || process.argv[2] == '--h' || process.argv[2] == '-h' || process.argv[2] == '-?') {
-                showHelp();
+                showHelp(low, high, numPicks, numDraws, drawType, minConsecutive);
                 return;
             } else {
                 if (inputError(low, high, numPicks, numDraws, drawType)) {
-                    showHelp();
+                    showHelp(low, high, numPicks, numDraws, drawType, minConsecutive);
                     return;
                 }
                 const startTime = new Date().getTime(),
