@@ -29,7 +29,7 @@ const config = {
                     low: 1,
                     high: 59,
                     numPicks: 6,
-                    mincon: 6
+                    minConsecutive: 6
                 }
             ]
         },
