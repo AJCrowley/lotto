@@ -156,12 +156,25 @@ const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
 
     runPreset = (preset) => {
         const presets = config.presets.find(element => element.id == preset),
-            startTime = new Date().getTime();
-        let results;
-        console.log(`\nRunning preset script for ${presets.name}`);
-        for (let count = 0; count < presets.draws.length; count++) {
-            results = runLotto(presets.draws[count].low, presets.draws[count].high, presets.draws[count].numPicks, presets.draws[count].numDraws, presets.draws[count].drawType, presets.draws[count].minConsecutive);
+            startTime = new Date().getTime(),
+            runCount = parseInt(process.argv[4]);
+        let results,
+            message = `\nRunning preset script for ${presets.name}`;
+        if (!isNaN(runCount)) {
+            message += ` ${runCount} times`
+            console.log(message);
+            for (let runTimes = 0; runTimes < runCount; runTimes++) {
+                for (let count = 0; count < presets.draws.length; count++) {
+                    results = runLotto(presets.draws[count].low, presets.draws[count].high, presets.draws[count].numPicks, presets.draws[count].numDraws, presets.draws[count].drawType, presets.draws[count].minConsecutive);
+                }
+            }
+        } else {
+            console.log(message);
+            for (let count = 0; count < presets.draws.length; count++) {
+                results = runLotto(presets.draws[count].low, presets.draws[count].high, presets.draws[count].numPicks, presets.draws[count].numDraws, presets.draws[count].drawType, presets.draws[count].minConsecutive);
+            }
         }
+
         const endTime = formatTime(parseInt(new Date().getTime()) - parseInt(startTime));
         console.log(`Execution time: ${endTime}`);
     },

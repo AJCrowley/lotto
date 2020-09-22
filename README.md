@@ -5,7 +5,7 @@
 This program requires a version of Node.js that supports ES6. It is provided free for use, if you make any enhancements, please feel free to issue a PR and I will integrate any changes that improve the software.
 ## Usage:
 ```
-node lotto.js [-h] [-p {preset}] {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}
+node lotto.js [-h] [-p {preset} {times to run preset}] {low ball} {high ball} {number of picks} {number of draws} {drawType: draw|accum|accumax|mincon} {min consecutive picks}
 ```
 
 ```
@@ -39,5 +39,9 @@ In this mode a minimum consecutive is specified instead of a number of draws. Dr
 To run a preset, use the ```-p``` flag and the id of the preset that you wish to use, e.g.:
 ```
 node lotto.js -p lottomc
+```
+You can also get the program to run the preset program multiple times by adding an integer after the name of the preset, e.g. to run the lottomc preset 3 times use the command:
+```
+node lotto.js -p lottomc 3
 ```
 Because many draw types require multiple specifications (eg 5 balls from a main selection, then 2 from a lower bonus range), these draws can be programmed into the config.js file. There are plenty of examples in there to get you started based upon the UK Lottery. Edit as you see fit.
