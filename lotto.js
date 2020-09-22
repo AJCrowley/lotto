@@ -161,7 +161,7 @@ const runLotto = (low, high, numPicks, numDraws, drawType, minConsecutive) => {
         let results,
             message = `\nRunning preset script for ${presets.name}`;
         if (!isNaN(runCount)) {
-            message += ` ${runCount} times`
+            message += ` ${runCount} times`;
             console.log(message);
             for (let runTimes = 0; runTimes < runCount; runTimes++) {
                 for (let count = 0; count < presets.draws.length; count++) {
