@@ -30,7 +30,7 @@ As above, but each consecutive time a ball is picked the point value goes up by 
 The next ball picked resets the score to 1.
 
 ## Max Accumulator (```accumax```)
-Same as the accumulator mode, but instead of sorting the results by points, the results are picked based on which balls received the most consecutive draws.
+Same as the accumulator mode, but instead of sorting the results by points, the results are picked primarily based on which balls received the most consecutive draws, with score as the secondary category, so if a ball has the same number of points, the one that had the most consecutive draws will win, if they have the same number of consecutive draws, the one with the most points will win.
 
 ## Minimum Consecutive (```mincon```)
 In this mode a minimum consecutive is specified instead of a number of draws. Draws will take place at random until a ball has been picked the same number of times in a row as the mincon value, this ball is then considered chosen, and the process is repeated until the desired number of balls have been chosen.
@@ -44,4 +44,4 @@ You can also get the program to run the preset program multiple times by adding 
 ```
 node lotto.js -p lottomc 3
 ```
-Because many draw types require multiple specifications (eg 5 balls from a main selection, then 2 from a lower bonus range), these draws can be programmed into the config.js file. There are plenty of examples in there to get you started based upon the UK Lottery. Edit as you see fit.
+Because many draw types require multiple specifications (eg 5 balls from a main selection, then 2 from a lower bonus range), these draws can be programmed into the config.js file. There are plenty of examples in there to get you started based upon the UK Lottery. I have created them so that they run a good number of permutations without taking more than a minute or two to run, you can start with some low numbers on your machine to get a baseline, and multiply as you see fit to get the script to run for the approximate amount of time that you want. Edit any and all parameters as you see fit.
