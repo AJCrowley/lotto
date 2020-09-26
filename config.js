@@ -62,7 +62,7 @@ const config = {
                     low: 1,
                     high: 47,
                     numPicks: 5,
-                    minConsecutive: 6
+                    minConsecutive: 7
                 },
                 {
                     drawType: 'mincon',
@@ -102,7 +102,7 @@ const config = {
                     low: 1,
                     high: 50,
                     numPicks: 5,
-                    minConsecutive: 6
+                    minConsecutive: 7
                 },
                 {
                     drawType: 'mincon',
